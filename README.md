@@ -1,2 +1,3 @@
-missing values e.g. lipids
-amount of files
+-missing values e.g. lipids
+-amount of files
+-otu diffs
