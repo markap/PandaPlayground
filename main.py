@@ -69,6 +69,23 @@ def plot_scfa_dry_column(column):
     plt.show()
 
 
+def plot_blood_lipid_diff(column_a = 3, column_b = 4):
+    blood_lipid_df = bdf.build_blood_lipid_df()
+    plotting.plot_diff_btw_columns(blood_lipid_df, column_a, column_b)
+    plt.show()
+
+
+def plot_blood_lipid_column(column):
+    blood_lipid_df = bdf.build_blood_lipid_df()
+    plotting.plot_column(blood_lipid_df, column)
+    plt.show()
+
+
+def plot_blood_lipid_per_index():
+    blood_lipid_df = bdf.build_blood_lipid_df()
+    plotting.plot_per_index(blood_lipid_df)
+    plt.show()
+
 def plot_lignan_urin_per_index(dataset=0):
     lignan_urin_df = bdf.build_lignan_urin_dfs()[dataset]
     plotting.plot_per_index(lignan_urin_df)
@@ -92,4 +109,16 @@ def plot_scfa_dry_per_index(dataset=0):
     plotting.plot_per_index(scfa_dry_df)
     plt.show()
 
+def plot_nutrition(nutrition=None):
+    nutrition_df = bdf.build_nutrition_df()
 
+    if nutrition:
+        nutrition_df.ix[nutrition].plot(kind='bar')
+    else:
+        nutrition_df.plot(kind='bar')
+
+    plt.show()
+
+
+def get_nutrition_types():
+    return dict([(k,v) for k,v in enumerate(bdf.build_nutrition_df().index)])

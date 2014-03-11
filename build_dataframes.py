@@ -43,7 +43,7 @@ def build_nutrition_df():
         test_person = test_person if test_person < 6 else test_person-1
         reindex.append(str(test_person))
 
-    return pd.DataFrame(temporary_df.values, reindex, temporary_df.columns)
+    return pd.DataFrame(temporary_df.values, reindex, temporary_df.columns).T
 
 
 def build_otu_df():
@@ -89,7 +89,7 @@ def build_blood_lipid_df():
                         """ index 6 is missing """
                         test_person = test_person if test_person < 6 else test_person-1
                     else:
-                        lipid_data[str(test_person) + '-' + str(j)] = item
+                        lipid_data[str(test_person) + '-' + str(j)] = float(item)
 
                 lipid_data_container[header[0]] =  lipid_data
 
