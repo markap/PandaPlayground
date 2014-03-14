@@ -1,0 +1,83 @@
+#http://little-book-of-r-for-multivariate-analysis.readthedocs.org/en/latest/src/multivariateanalysis.html
+
+read.csv('otu.csv', row.name=1)
+
+> mosthighlycorrelated <- function(mydataframe,numtoreport)
+  {
+     # find the correlations
+     cormatrix <- cor(mydataframe)
+     # set the correlations on the diagonal or lower triangle to zero,
+     # so they will not be reported as the highest ones:
+     diag(cormatrix) <- 0
+     cormatrix[lower.tri(cormatrix)] <- 0
+     # flatten the matrix into a dataframe for easy sorting
+     fm <- as.data.frame(as.table(cormatrix))
+     # assign human-friendly names
+     names(fm) <- c("First.Variable", "Second.Variable","Correlation")
+     # sort and print the top n correlations
+     head(fm[order(abs(fm$Correlation),decreasing=T),],n=numtoreport)
+  }
+
+
+> mosthighlycorrelated(t(otus), 10)
+
+
+
+# pca
+> standardisedconcentrations <- as.data.frame(scale(wine[2:14]))
+> wine.pca <- prcomp(standardisedconcentrations)
+> summary(wine.pca)
+Importance of components:
+                         PC1    PC2    PC3     PC4     PC5     PC6     PC7
+Standard deviation     2.169 1.5802 1.2025 0.95863 0.92370 0.80103 0.74231
+Proportion of Variance 0.362 0.1921 0.1112 0.07069 0.06563 0.04936 0.04239
+Cumulative Proportion  0.362 0.5541 0.6653 0.73599 0.80162 0.85098 0.89337
+                           PC8     PC9   PC10    PC11    PC12    PC13
+Standard deviation     0.59034 0.53748 0.5009 0.47517 0.41082 0.32152
+Proportion of Variance 0.02681 0.02222 0.0193 0.01737 0.01298 0.00795
+Cumulative Proportion  0.92018 0.94240 0.9617 0.97907 0.99205 1.00000
+
+> wine.pca$sdev
+ [1] 2.1692972 1.5801816 1.2025273 0.9586313 0.9237035 0.8010350 0.7423128
+ [8] 0.5903367 0.5374755 0.5009017 0.4751722 0.4108165 0.3215244
+> sum((wine.pca$sdev)^2)
+[1] 13
+# because of scaling and the result that sdev is 1, sum is 1 as well
+
+
+
+> screeplot(wine.pca, type='lines')
+> (wine.pca$sdev)^2
+ [1] 4.7058503 2.4969737 1.4460720 0.9189739 0.8532282 0.6416570 0.5510283
+ [8] 0.3484974 0.2888799 0.2509025 0.2257886 0.1687702 0.1033779
+# use principal components which are over 1 (Kaiser's criterion)
+
+> summary(wine.pca)
+# components which explain 80% of variance
+
+> text(wine.pca$x[,1],wine.pca$x[,2], wine$V1, cex=0.7, pos=4, col="red")
+> plot(wine.pca)
+> biplot(wine.pca)
+
+
+
+
+library(lattice)
+
+my.wines <- read.csv("http://steviep42.bitbucket.org/YOUTUBE.DIR/wines.csv", header=TRUE)
+
+# Look at the correlations
+
+library(gclus)
+my.abs     <- abs(cor(my.wines))
+my.colors  <- dmat.color(my.abs)
+my.ordered <- order.single(cor(my.wines))
+cpairs(my.wines, my.ordered, panel.colors=my.colors, gap=0.5)
+
+
+# PCA interpretation
+right angle-> 0
+small angle -> 1
+big angle -> -1
+
+

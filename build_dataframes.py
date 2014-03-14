@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import const
+import util
 
 
 def reindex_df(df, split_fn):
@@ -16,21 +17,21 @@ def reindex_df(df, split_fn):
     return pd.DataFrame(df.values, reindex, df.columns).T
 
 
-def build_lignan_urin_dfs():
-    return build_lignan_dfs(const.LIGNAN_URIN_PATH, lambda x: x.split('-'))
+def build_lignan_urin_df():
+    return build_lignan_df(const.LIGNAN_URIN_PATH, lambda x: x.split('-'))
 
 
-def build_lignan_plasma_dfs():
-    return build_lignan_dfs(const.LIGNAN_PLASMA_PATH, lambda x: x.split()[-1].split('-'))
+def build_lignan_plasma_df():
+    return build_lignan_df(const.LIGNAN_PLASMA_PATH, lambda x: x.split()[-1].split('-'))
 
 
-def build_lignan_dfs(file_, split_fn):
-    temporary_df = pd.read_csv(file_, index_col=0)
+def build_lignan_df(file_, split_fn):
+    temporary_df = pd.read_csv(file_, index_col=0).fillna(0)
+    temporary_df = temporary_df.applymap(lambda x: x if x > 0 else 0)
 
-    sample_a, sample_b = np.array_split(temporary_df,2)
+    df = util.merge_dfs_by_mean(np.array_split(temporary_df,2))
 
-    # todo add some assertions
-    return reindex_df(sample_a, split_fn), reindex_df(sample_b, split_fn)
+    return reindex_df(df, split_fn),
 
 
 def build_nutrition_df():
@@ -47,12 +48,10 @@ def build_nutrition_df():
 
 
 def build_otu_df():
-    temporary_df = pd.read_csv(const.OTU_PATH, delimiter='\t', index_col=0).T
 
-    def reindex_split(idx):
-        new_index = idx.split('F')[0]
-        return [new_index[:-1], new_index[-1]]
-    return reindex_df(temporary_df, reindex_split)
+    temporary_df = pd.read_csv(const.OTU_PATH, delimiter='\t', index_col=0).T[:-1].astype(int)
+
+    return reindex_df(temporary_df, lambda x: x.split('.'))
 
 
 def build_scfa_wet_df():
@@ -98,7 +97,7 @@ def build_blood_lipid_df():
 
 
 if __name__ == "__main__":
-    lingnan_urin_a_df, lignan_urin_b_df = build_lignan_urin_dfs()
+    lingnan_urin_a = build_lignan_urin_df()
     #print lingnan_urin_a_df
     #print lignan_urin_b_df
 
@@ -106,7 +105,7 @@ if __name__ == "__main__":
     #print nutrition_df.columns
     #print nutrition_df.index
 
-    lingnan_plasma_a_df, lignan_plasma_b_df = build_lignan_plasma_dfs()
+    lingnan_plasma_a_df,  = build_lignan_plasma_df()
     #print lingnan_plasma_a_df
     #print lignan_plasma_b_df
 

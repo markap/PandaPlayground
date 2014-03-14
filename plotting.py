@@ -14,32 +14,11 @@ def plot_figure(df, name):
 
 
 def plot_diff_btw_columns(df, column_a, column_b):
-    get_diff_btw_columns(df, column_a, column_b).plot(kind='bar')
+    util.get_diff_btw_columns(df, column_a, column_b).plot(kind='bar')
 
 
 def plot_column(df, column):
-    get_column(df, column).plot(kind='bar')
-
-
-def get_diff_btw_columns(df, column_a, column_b):
-    data = {}
-    for test_person in range(1,10):
-        build_column_a = str(test_person) + '-' + str(column_a)
-        build_column_b = str(test_person) + '-' + str(column_b)
-
-        data[test_person] = df[build_column_b] - df[build_column_a]
-
-    return pd.DataFrame(data)
-
-
-def get_column(df, column):
-    data = {}
-    for test_person in range(1,10):
-        build_column = str(test_person) + '-' + str(column)
-
-        data[build_column] = df[build_column]
-
-    return pd.DataFrame(data)
+    util.get_column(df, column).plot(kind='bar')
 
 
 
