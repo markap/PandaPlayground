@@ -1,12 +1,23 @@
 
 CSV_PATH = 'data/'
-LIGNAN_URIN_PATH = CSV_PATH + 'test.csv'
-NUTRITION_PATH = CSV_PATH + 'nutrition.csv'
-LIGNAN_PLASMA_PATH = CSV_PATH + '140305_Lignans_HH_plasma.csv'
-BLOOD_LIPID_PATH = CSV_PATH + '140304_blood_lipids.csv'
-OTU_PATH = CSV_PATH + 'NEW_MicroFlax-otu_table_4q.tab'
-SCFA_DRY_PATH = CSV_PATH + '140304_SCFA_dry.csv'
-SCFA_WET_PATH = CSV_PATH + '140304_SCFA_wet.csv'
+ORG_LIGNAN_URIN_PATH = CSV_PATH + 'test.csv'
+ORG_NUTRITION_PATH = CSV_PATH + 'nutrition.csv'
+ORG_LIGNAN_PLASMA_PATH = CSV_PATH + '140305_Lignans_HH_plasma.csv'
+ORG_BLOOD_LIPID_PATH = CSV_PATH + '140304_blood_lipids.csv'
+ORG_OTU_PATH = CSV_PATH + 'NEW_MicroFlax-otu_table_4q.tab'
+ORG_SCFA_DRY_PATH = CSV_PATH + '140304_SCFA_dry.csv'
+ORG_SCFA_WET_PATH = CSV_PATH + '140304_SCFA_wet.csv'
 
-TEST_PERSONS = 9*5
+PREPROCESSED_PATH = "./preprocessed/"
+BLOOD_LIPID_PATH = PREPROCESSED_PATH + 'blood_lipid.csv'
+LIGNAN_PLASMA_PATH = PREPROCESSED_PATH + 'lignan_plasma.csv'
+LIGNAN_URIN_PATH = PREPROCESSED_PATH + 'lignan_urin.csv'
+SCFA_DRY_PATH = PREPROCESSED_PATH + 'scfa_dry.csv'
+SCFA_WET_PATH = PREPROCESSED_PATH + 'scfa_wet.csv'
+OTUS_PATH = PREPROCESSED_PATH + 'otus.csv'
+NUTRITION_PATH = PREPROCESSED_PATH + 'nutrition.csv'
+
+VISUALIZATION = 'visualization/'
+
+TEST_PERSONS = 9
 LIGNANS = 4

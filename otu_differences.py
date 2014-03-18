@@ -52,8 +52,7 @@ def compute_main_diff_otus(data):
 
 
 if __name__ == '__main__':
-    import build_dataframes as bdf
-    df = bdf.build_otu_df()
+    df = pd.read_csv(, index_col=0)
     matrix, matrix_values = compute_similarity_matrix(df)
     print matrix
     df =  compute_main_diff_otus(matrix_values)

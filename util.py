@@ -13,6 +13,8 @@ def series_to_df(series, split_fn):
         val = series[idx]
 
         new_index, new_column = split_fn(idx)
+        new_index = int(new_index)
+        new_column = int(new_column)
 
         if new_index in data:
             data[new_index][new_column] = val
@@ -61,7 +63,16 @@ def merge_dfs_by_mean(a,b):
         for j in df.index:
             data[i][j] = df[i].ix[j].mean()
 
-    return pd.DataFrame(data)
+
+    return pd.DataFrame(data, a.index, a.columns)
+
+
+def string_shorten(str_):
+
+    if len(str_) > 16:
+        str_ = str_[:9] + '..' +  str_[-5:]
+
+    return str_
 
 
 
@@ -73,3 +84,16 @@ def get_series_for_time_and_index(df, time, index):
             columns.append(str(person) + '-' + str(t))
 
     return df[columns].ix[index]
+
+
+def get_column_index(time, has_time):
+
+    if has_time == False:
+        return [str(i) for i in range(1,10)]
+
+    columns = []
+
+    for person in range(1,10):
+        for t in time:
+            columns.append(str(person) + '-' + str(t))
+    return columns

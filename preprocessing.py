@@ -18,24 +18,26 @@ def reindex_df(df, split_fn):
 
 
 def build_lignan_urin_df():
-    return build_lignan_df(const.LIGNAN_URIN_PATH, lambda x: x.split('-'))
+    return build_lignan_df(const.ORG_LIGNAN_URIN_PATH, lambda x: x.split('-'))
 
 
 def build_lignan_plasma_df():
-    return build_lignan_df(const.LIGNAN_PLASMA_PATH, lambda x: x.split()[-1].split('-'))
+    return build_lignan_df(const.ORG_LIGNAN_PLASMA_PATH, lambda x: x.split()[-1].split('-'))
 
 
 def build_lignan_df(file_, split_fn):
     temporary_df = pd.read_csv(file_, index_col=0).fillna(0)
     temporary_df = temporary_df.applymap(lambda x: x if x > 0 else 0)
 
-    df = util.merge_dfs_by_mean(np.array_split(temporary_df,2))
 
-    return reindex_df(df, split_fn),
+    a,b = np.array_split(temporary_df,2)
+    df = util.merge_dfs_by_mean(a,b)
+
+    return reindex_df(df, split_fn)
 
 
 def build_nutrition_df():
-    temporary_df = pd.read_csv(const.NUTRITION_PATH, index_col=0)
+    temporary_df = pd.read_csv(const.ORG_NUTRITION_PATH, index_col=0)
 
     reindex = []
     for i in temporary_df.index:
@@ -49,17 +51,17 @@ def build_nutrition_df():
 
 def build_otu_df():
 
-    temporary_df = pd.read_csv(const.OTU_PATH, delimiter='\t', index_col=0).T[:-1].astype(int)
+    temporary_df = pd.read_csv(const.ORG_OTU_PATH, delimiter='\t', index_col=0).T[:-1].astype(int)
 
-    return reindex_df(temporary_df, lambda x: x.split('.'))
+    return reindex_df(temporary_df, lambda x: x.split('.')).sort_index(axis=1)
 
 
 def build_scfa_wet_df():
-    return build_scfa_df(const.SCFA_WET_PATH)
+    return build_scfa_df(const.ORG_SCFA_WET_PATH)
 
 
 def build_scfa_dry_df():
-    return build_scfa_df(const.SCFA_DRY_PATH)
+    return build_scfa_df(const.ORG_SCFA_DRY_PATH)
 
 def build_scfa_df(path):
     temporary_df = pd.read_csv(path, index_col=0)
@@ -71,7 +73,7 @@ def build_blood_lipid_df():
 
     lipid_data_container = {}
 
-    with open(const.BLOOD_LIPID_PATH, 'rb') as csvfile:
+    with open(const.ORG_BLOOD_LIPID_PATH, 'rb') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         header = None
         for i, row in enumerate(reader):
@@ -97,26 +99,13 @@ def build_blood_lipid_df():
 
 
 if __name__ == "__main__":
-    lingnan_urin_a = build_lignan_urin_df()
-    #print lingnan_urin_a_df
-    #print lignan_urin_b_df
+    build_blood_lipid_df().to_csv(const.BLOOD_LIPID_PATH)
+    build_lignan_plasma_df().to_csv(const.LIGNAN_PLASMA_PATH)
+    build_lignan_urin_df().to_csv(const.LIGNAN_URIN_PATH)
+    build_scfa_dry_df().to_csv(const.SCFA_DRY_PATH)
+    build_scfa_wet_df().to_csv(const.SCFA_WET_PATH)
+    build_otu_df().to_csv(const.OTUS_PATH)
+    build_nutrition_df().to_csv(const.NUTRITION_PATH)
 
-    nutrition_df = build_nutrition_df()
-    #print nutrition_df.columns
-    #print nutrition_df.index
-
-    lingnan_plasma_a_df,  = build_lignan_plasma_df()
-    #print lingnan_plasma_a_df
-    #print lignan_plasma_b_df
-
-    blood_lipid_df = build_blood_lipid_df()
-    print blood_lipid_df.index
-
-    otu_df = build_otu_df()
-    print otu_df.index
-
-    scfa_dry_df = build_scfa_dry_df()
-    scfa_wet_df = build_scfa_wet_df()
-    print scfa_wet_df.index
-
+    print "preprocessed files written"
 
