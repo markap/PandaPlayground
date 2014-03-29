@@ -13,6 +13,7 @@ class Correlation:
         self.time = time
         self.ranks_ = None
         self.result_df = None
+        self.ranked = None
 
         self.has_time_a = True
         self.has_time_b = True
@@ -68,10 +69,11 @@ class Correlation:
 
             ranked = []
             for idx in absolute_ranks.index:
-                ranked.append((idx, df[idx]))
+                ranked.append([idx, df[idx]])
 
             self.ranks_ = pd.Series(ranked)
-        return self.ranks_[:ranks]
+            self.ranked = ranked
+        return pd.DataFrame(self.ranked[:ranks])
 
 
     def plot_rank(self, rank=0):
@@ -156,8 +158,8 @@ def nutrition_to_otus_correlation(time=[1]):
     return Correlation(a,b,time)
 
 
+
 if __name__ == '__main__':
-    obj = lignan_urin_to_otus_correlation(time=[1])
+    obj = nutrition_to_otus_correlation(time=[1])
     obj.compute_matrix()
-    obj.ranks()
-    obj.stats_of_rank(0)
+    obj.ranks(40).to_csv('outi.csv')
